@@ -1,0 +1,46 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE generatorConfiguration
+        PUBLIC "-//mybatis.org//DTD MyBatis Generator Configuration 1.0//EN"
+        "http://mybatis.org/dtd/mybatis-generator-config_1_0.dtd">
+<generatorConfiguration>
+
+    <context id="PostgreSql" targetRuntime="MyBatis3" defaultModelType="flat">
+        <!-- 自动检查关键字，为关键字增加反引号 -->
+        <property name="autoDelimitKeywords" value="true"/>
+        <property name="beginningDelimiter" value="`"/>
+        <property name="endingDelimiter" value="`"/>
+
+        <!-- 不生成注释 -->
+        <commentGenerator>
+            <property name="suppressAllComments" value="true"/>
+        </commentGenerator>
+
+        <!-- 数据库连接 -->
+        <jdbcConnection driverClass="org.postgresql.Driver"
+                        connectionURL="jdbc:postgresql://localhost:5432/voir"
+                        userId="postgres"
+                        password="123456">
+        </jdbcConnection>
+
+        <!-- domain类的位置 -->
+        <javaModelGenerator targetProject="src\main\java"
+                            targetPackage="com.hjxlog.domain"/>
+
+        <!-- mapper xml的位置 -->
+        <sqlMapGenerator targetProject="src\main\resources"
+                         targetPackage="mapper"/>
+
+        <!-- mapper类的位置 -->
+        <javaClientGenerator targetProject="src\main\java"
+                             targetPackage="com.hjxlog.mapper"
+                             type="XMLMAPPER"/>
+
+        <!--要生成的表名-->
+        <table schema="public" tableName="blog"/>
+        <table schema="public" tableName="blog_tag"/>
+        <table schema="public" tableName="category"/>
+        <table schema="public" tableName="tag"/>
+        <table schema="public" tableName="user"/>
+    </context>
+</generatorConfiguration>
+
