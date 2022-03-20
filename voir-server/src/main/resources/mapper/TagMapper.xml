@@ -1,0 +1,47 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.hjxlog.mapper.TagMapper">
+
+  <resultMap id="BaseResultMap" type="com.hjxlog.domain.Tag">
+    <id column="id" jdbcType="INTEGER" property="id" />
+    <result column="name" jdbcType="VARCHAR" property="name" />
+    <result column="create_time" jdbcType="TIMESTAMP" property="createTime" />
+    <result column="update_time" jdbcType="TIMESTAMP" property="updateTime" />
+  </resultMap>
+
+  <sql id="Base_Column_List">
+    id, name, create_time, update_time
+  </sql>
+
+  <select id="select" parameterType="java.lang.Integer" resultMap="BaseResultMap">
+    select 
+    <include refid="Base_Column_List" />
+    from public.tag
+    where id = #{id,jdbcType=INTEGER}
+  </select>
+
+  <select id="list" resultType="com.hjxlog.dto.QueryTagRespDto">
+    SELECT id,name FROM tag ORDER BY update_time desc
+  </select>
+
+  <delete id="delete" parameterType="java.lang.Integer">
+    delete from public.tag
+    where id = #{id,jdbcType=INTEGER}
+  </delete>
+
+  <insert id="insert" parameterType="com.hjxlog.domain.Tag">
+    insert into public.tag (id, name, create_time,
+      update_time)
+    values (#{id,jdbcType=INTEGER}, #{name,jdbcType=VARCHAR}, #{createTime,jdbcType=TIMESTAMP}, 
+      #{updateTime,jdbcType=TIMESTAMP})
+  </insert>
+
+  <update id="update" parameterType="com.hjxlog.domain.Tag">
+    update public.tag
+    set name = #{name,jdbcType=VARCHAR},
+      create_time = #{createTime,jdbcType=TIMESTAMP},
+      update_time = #{updateTime,jdbcType=TIMESTAMP}
+    where id = #{id,jdbcType=INTEGER}
+  </update>
+
+</mapper>

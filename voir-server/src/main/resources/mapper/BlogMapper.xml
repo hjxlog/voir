@@ -1,0 +1,82 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.hjxlog.mapper.BlogMapper">
+
+    <resultMap id="BaseResultMap" type="com.hjxlog.domain.Blog">
+        <id column="id" jdbcType="INTEGER" property="id"/>
+        <result column="title" jdbcType="VARCHAR" property="title"/>
+        <result column="content" jdbcType="VARCHAR" property="content"/>
+        <result column="category_id" jdbcType="INTEGER" property="categoryId"/>
+        <result column="create_time" jdbcType="TIMESTAMP" property="createTime"/>
+        <result column="update_time" jdbcType="TIMESTAMP" property="updateTime"/>
+    </resultMap>
+
+    <sql id="Base_Column_List">
+    id, title, content, category_id, create_time, update_time
+  </sql>
+
+    <select id="select" parameterType="java.lang.Integer" resultMap="BaseResultMap">
+        select
+        <include refid="Base_Column_List"/>
+        from public.blog
+        where id = #{id,jdbcType=INTEGER}
+    </select>
+
+    <resultMap id="queryBlogMap" type="com.hjxlog.dto.QueryBlogRespDto">
+        <id column="id" property="id"/>
+        <result column="title" property="title"/>
+        <result column="content" property="content"/>
+        <result column="update_time" property="updateTime"/>
+        <association property="category" javaType="com.hjxlog.domain.Category">
+            <id column="category_id" property="id"/>
+            <result column="category_name" property="name"/>
+        </association>
+        <collection property="tagList" ofType="com.hjxlog.domain.Tag">
+            <id column="tag_id" property="id"/>
+            <result column="tag_name" property="name"/>
+        </collection>
+    </resultMap>
+    <select id="list" resultMap="queryBlogMap">
+        SELECT t1.id,t1.title,t1.content,t1.update_time,
+        t2.id as category_id,t2.name as category_name,
+        t4.id as tag_id,t4.name as tag_name
+        FROM blog t1
+        LEFT JOIN category t2
+        on t1.category_id = t2.id
+        LEFT JOIN blog_tag t3
+        on t3.blog_id = t1.id
+        LEFT JOIN tag t4
+        on t4.id = t3.tag_id
+        ORDER BY t1.update_time desc
+  </select>
+
+    <delete id="delete" parameterType="java.lang.Integer">
+        delete from public.blog
+        where id = #{id,jdbcType=INTEGER}
+  </delete>
+
+    <insert id="insert" parameterType="com.hjxlog.domain.Blog">
+        insert into public.blog
+        (title, content, category_id, create_time, update_time)
+        values
+        (
+            #{title,jdbcType=VARCHAR},
+            #{content,jdbcType=VARCHAR},
+            #{categoryId,jdbcType=INTEGER},
+            CURRENT_TIMESTAMP,
+            CURRENT_TIMESTAMP
+        )
+  </insert>
+
+    <update id="update" parameterType="com.hjxlog.domain.Blog">
+        update public.blog
+        set
+          title = #{title,jdbcType=VARCHAR},
+          content = #{content,jdbcType=VARCHAR},
+          category_id = #{categoryId,jdbcType=INTEGER},
+          update_time = CURRENT_TIMESTAMP
+        where id = #{id,jdbcType=INTEGER}
+  </update>
+
+</mapper>
