@@ -8,22 +8,24 @@
     <el-col :span="3">
       <BaseAside/>
     </el-col>
-    <el-col :span="19">
-      main
+    <el-col :span="21">
+      <HomeView/>
     </el-col>
   </el-row>
-<!--  <router-view/>-->
+  <router-view/>
 </template>
 
 <script>
 import BaseHeader from "@/components/BaseHeader";
 import BaseAside from "@/components/BaseAside";
+import HomeView from "./views/HomeView";
 
 export default {
   name: "AdminLayout",
   components: {
     BaseHeader,
-    BaseAside
+    BaseAside,
+    HomeView
   }
 }
 </script>

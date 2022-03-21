@@ -8,7 +8,7 @@ import './assets/css/global.css'
 import * as ELIcons from '@element-plus/icons-vue'
 
 const app = createApp(App);
-app.use(store).use(router).use(ElementPlus,{ size: 'small'})
+app.use(store).use(router).use(ElementPlus)
 for(const iconName in ELIcons){
     app.component(iconName,ELIcons[iconName])
 }
