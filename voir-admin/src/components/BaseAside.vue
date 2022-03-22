@@ -5,22 +5,17 @@
           default-active="2"
           class="el-menu-vertical-demo"
           style="min-height: calc(100vh - 60px)"
+          :default-active="$route.path"
+          router
       >
         <el-sub-menu index="1">
           <template #title>
             <el-icon><notebook /></el-icon>
             <span>博客管理</span>
           </template>
-          <el-menu-item index="1-1">内容管理</el-menu-item>
-          <el-menu-item index="1-2">评论管理</el-menu-item>
-        </el-sub-menu>
-        <el-sub-menu index="2">
-          <template #title>
-            <el-icon><management /></el-icon>
-            <span>归类管理</span>
-          </template>
-          <el-menu-item index="2-1">分类管理</el-menu-item>
-          <el-menu-item index="2-2">标签管理</el-menu-item>
+          <el-menu-item index="blog">内容管理</el-menu-item>
+          <el-menu-item index="category">分类管理</el-menu-item>
+          <el-menu-item index="tag">标签管理</el-menu-item>
         </el-sub-menu>
       </el-menu>
     </el-col>
