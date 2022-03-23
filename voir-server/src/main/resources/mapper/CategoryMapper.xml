@@ -21,7 +21,13 @@
     </select>
 
     <select id="list" resultType="com.hjxlog.dto.QueryCategoryRespDto">
-        SELECT id,name FROM category ORDER BY update_time desc
+        SELECT id,name FROM category
+        <where>
+            <if test="name != null and name != ''">
+                name like concat('%',#{name},'%')
+            </if>
+        </where>
+        ORDER BY update_time desc
   </select>
 
     <delete id="delete" parameterType="java.lang.Integer">

@@ -31,6 +31,10 @@ public class CategoryController {
     @ResponseBody
     public Result add(@RequestBody CategoryInputDto dto) {
         MapResult<String, String> result = new MapResult<>();
+        if(dto.getId()!=null){
+            result.setCode("1");
+            result.setMsg("该分类已存在");
+        }
         categoryService.add(dto);
         return result;
     }

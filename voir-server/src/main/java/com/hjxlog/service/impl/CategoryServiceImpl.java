@@ -26,6 +26,7 @@ public class CategoryServiceImpl implements CategoryService {
 
     @Override
     public boolean add(CategoryInputDto dto) {
+
         Category category = new Category();
         BeanUtils.copyProperties(dto, category);
         return categoryMapper.insert(category);
