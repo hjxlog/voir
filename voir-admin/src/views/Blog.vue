@@ -19,13 +19,16 @@
     <el-table :data="tableData"
               stripe border height="75vh"
               style="width: 100%">
-      <el-table-column sortable prop="id" label="ID"/>
+      <el-table-column type="index" width="100" label="序号"/>
+      <el-table-column v-if="false" prop="id" label="ID"/>
       <el-table-column prop="title" label="标题"/>
-      <el-table-column prop="content" label="内容"/>
-      <el-table-column fixed="right" label="Operations" width="120">
-        <template #default>
+      <el-table-column prop="category.name" label="分类"/>
+<!--      <el-table-column prop="tagList" label="分类"/>-->
+      <el-table-column fixed="right" label="操作" width="120">
+        <template #default = "blogInfo">
+          <el-button type="text" @click="handleClick">查看</el-button>
           <el-button type="text" @click="handleClick">编辑</el-button>
-          <el-popconfirm title="确认删除？">
+          <el-popconfirm title="确认删除？" @confirm="handleDelete(categoryInfo.row.id)">
             <template #reference>
               <el-button type="text">删除</el-button>
             </template>
@@ -89,16 +92,30 @@ export default {
     return {
       form: {},
       dialogVisible: false,
-      tableData: [
-        {
-          id: 1,
-          title: "学习mybatis",
-          content: "内容"
-        }
-      ]
+      name: '',
+      currentPage: 1,
+      pageSize: 10,
+      total: 0,
+      tableData: []
     }
   },
+  created() {
+    this.load()
+  },
   methods: {
+    load() {
+      this.loading = true
+      request.post("/blog/list", {
+        pageNum: this.currentPage,
+        pageSize: this.pageSize,
+        name: this.name
+      }).then(res => {
+        console.log(res)
+        // this.loading = false
+        this.tableData = res.body.data
+        this.total = res.body.total
+      })
+    },
     add() {
       this.dialogVisible = true
       // 把表单内容取消

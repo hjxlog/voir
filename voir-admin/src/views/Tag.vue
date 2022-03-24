@@ -7,10 +7,10 @@
     <el-col :span="21">
       <el-form :inline="true" class="demo-form-inline">
         <el-form-item style="margin-right: 10px;">
-          <el-input v-model="input" placeholder="请输入标签名称..."/>
+          <el-input v-model="name" placeholder="请输入标签名称..."/>
         </el-form-item>
         <el-form-item>
-          <el-button type="primary">搜索</el-button>
+          <el-button type="primary" @click="load">搜索</el-button>
         </el-form-item>
       </el-form>
     </el-col>
@@ -19,13 +19,13 @@
     <el-table :data="tableData"
               stripe border height="75vh"
               style="width: 100%">
-      <el-table-column sortable prop="id" label="ID"/>
+      <el-table-column type="index" width="100" label="序号"/>
+      <el-table-column v-if="false" prop="id" label="ID"/>
       <el-table-column prop="name" label="标签名称"/>
-      <el-table-column prop="blogCount" label="所属博客数"/>
       <el-table-column fixed="right" label="Operations" width="120">
-        <template #default>
-          <el-button type="text" @click="handleClick">编辑</el-button>
-          <el-popconfirm title="确认删除？">
+        <template #default = "tagInfo">
+          <el-button type="text" @click="handleEdit(tagInfo.row)">编辑</el-button>
+          <el-popconfirm title="确认删除？" @confirm="handleDelete(tagInfo.row.id)">
             <template #reference>
               <el-button type="text">删除</el-button>
             </template>
@@ -37,14 +37,14 @@
   <div style="padding-left: 10px;">
     <div class="demo-pagination-block">
       <el-pagination
-          v-model:currentPage="currentPage4"
-          v-model:page-size="pageSize4"
+          v-model:currentPage="currentPage"
+          v-model:page-size="pageSize"
           :page-sizes="[5, 10, 20, 50]"
           :small="small"
           :disabled="disabled"
           :background="background"
           layout="total, sizes, prev, pager, next, jumper"
-          :total="100"
+          :total="total"
           @size-change="handleSizeChange"
           @current-change="handleCurrentChange"
       />
@@ -58,7 +58,7 @@
   >
     <el-form :model="form" label-width="120px">
       <el-form-item label="标签名称">
-        <el-input v-model="form.title"/>
+        <el-input v-model="form.name"/>
       </el-form-item>
     </el-form>
     <template #footer>
@@ -79,26 +79,101 @@ export default {
     return {
       form: {},
       dialogVisible: false,
-      tableData: [
-        {
-          id: 1,
-          name: "学习笔记",
-          blogCount: 13
-        }
-      ]
+      name: '',
+      currentPage: 1,
+      pageSize: 10,
+      total: 0,
+      tableData: []
     }
   },
+  created() {
+    this.load()
+  },
   methods: {
+    load() {
+      this.loading = true
+      request.post("/tag/list", {
+        pageNum: this.currentPage,
+        pageSize: this.pageSize,
+        name: this.name
+      }).then(res => {
+        console.log(res)
+        // this.loading = false
+        this.tableData = res.body.data
+        this.total = res.body.total
+      })
+    },
+    handleEdit(row) {
+      this.form = JSON.parse(JSON.stringify(row))
+      this.dialogVisible = true
+    },
+    handleDelete(id) {
+      request.post("/tag/delete",{
+        id: id
+      }).then(res => {
+        if (res.code === '0') {
+          this.$message({
+            type: "success",
+            message: "删除成功"
+          })
+        } else {
+          this.$message({
+            type: "error",
+            message: res.msg
+          })
+        }
+        this.load()  // 删除之后重新加载表格的数据
+      })
+    },
+    handleSizeChange(pageSize) {   // 改变当前每页的个数触发
+      this.pageSize = pageSize
+      this.load()
+    },
+    handleCurrentChange(pageNum) {  // 改变当前页码触发
+      this.currentPage = pageNum
+      this.load()
+    },
     add() {
       this.dialogVisible = true
       // 把表单内容取消
       this.form = {}
     },
-    save(){
-      // 请求返回之后，res操作
-      request.post("/blog/add",this.form).then(res => {
-        console.log(res)
-      })
+    save() {
+      if(this.form.id){ // 更新
+        // 请求返回之后，res操作
+        request.post("/tag/update", this.form).then(res => {
+          if (res.code === '0') {
+            this.$message({
+              type: "success",
+              message: "更新成功"
+            })
+          } else {
+            this.$message({
+              type: "error",
+              message: res.msg
+            })
+          }
+          this.load() // 刷新表格的数据
+          this.dialogVisible = false  // 关闭弹窗
+        })
+      }else{ // 新增
+        // 请求返回之后，res操作
+        request.post("/tag/add", this.form).then(res => {
+          if (res.code === '0') {
+            this.$message({
+              type: "success",
+              message: "添加成功"
+            })
+          } else {
+            this.$message({
+              type: "error",
+              message: res.msg
+            })
+          }
+          this.load() // 刷新表格的数据
+          this.dialogVisible = false  // 关闭弹窗
+        })
+      }
     }
   }
 }

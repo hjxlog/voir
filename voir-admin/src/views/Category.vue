@@ -19,12 +19,13 @@
     <el-table :data="tableData"
               stripe border height="75vh"
               style="width: 100%">
-      <el-table-column sortable prop="id" label="ID"/>
+      <el-table-column type="index" width="100" label="序号"/>
+      <el-table-column v-if="false" prop="id" label="ID"/>
       <el-table-column prop="name" label="分类名称"/>
       <el-table-column fixed="right" label="Operations" width="120">
         <template #default = "categoryInfo">
           <el-button type="text" @click="handleEdit(categoryInfo.row)">编辑</el-button>
-          <el-popconfirm title="确认删除？">
+          <el-popconfirm title="确认删除？" @confirm="handleDelete(categoryInfo.row.id)">
             <template #reference>
               <el-button type="text">删除</el-button>
             </template>
@@ -106,6 +107,24 @@ export default {
       this.form = JSON.parse(JSON.stringify(row))
       this.dialogVisible = true
     },
+    handleDelete(id) {
+      request.post("/category/delete",{
+        id: id
+      }).then(res => {
+        if (res.code === '0') {
+          this.$message({
+            type: "success",
+            message: "删除成功"
+          })
+        } else {
+          this.$message({
+            type: "error",
+            message: res.msg
+          })
+        }
+        this.load()  // 删除之后重新加载表格的数据
+      })
+    },
     handleSizeChange(pageSize) {   // 改变当前每页的个数触发
       this.pageSize = pageSize
       this.load()
@@ -134,7 +153,7 @@ export default {
               message: res.msg
             })
           }
-          // this.load() // 刷新表格的数据
+          this.load() // 刷新表格的数据
           this.dialogVisible = false  // 关闭弹窗
         })
       }else{ // 新增
@@ -151,7 +170,7 @@ export default {
               message: res.msg
             })
           }
-          // this.load() // 刷新表格的数据
+          this.load() // 刷新表格的数据
           this.dialogVisible = false  // 关闭弹窗
         })
       }
