@@ -30,17 +30,19 @@
   </delete>
 
   <insert id="insert" parameterType="com.hjxlog.domain.Tag">
-    insert into public.tag (id, name, create_time,
-      update_time)
-    values (#{id,jdbcType=INTEGER}, #{name,jdbcType=VARCHAR}, #{createTime,jdbcType=TIMESTAMP}, 
-      #{updateTime,jdbcType=TIMESTAMP})
+    insert into public.tag (name, create_time,update_time)
+    values
+    (
+      #{name,jdbcType=VARCHAR},
+      CURRENT_TIMESTAMP,
+      CURRENT_TIMESTAMP
+    )
   </insert>
 
   <update id="update" parameterType="com.hjxlog.domain.Tag">
     update public.tag
     set name = #{name,jdbcType=VARCHAR},
-      create_time = #{createTime,jdbcType=TIMESTAMP},
-      update_time = #{updateTime,jdbcType=TIMESTAMP}
+      update_time = CURRENT_TIMESTAMP
     where id = #{id,jdbcType=INTEGER}
   </update>
 
