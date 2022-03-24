@@ -4,7 +4,9 @@
       <el-header>
         <BaseHeader/>
       </el-header>
-      <el-main>Main</el-main>
+      <el-main>
+        <BaseMain/>
+      </el-main>
       <el-footer>
         <BaseFooter/>
       </el-footer>
@@ -15,12 +17,14 @@
 <script>
 import BaseHeader from "@/components/BaseHeader";
 import BaseFooter from "@/components/BaseFooter";
+import BaseMain from "@/components/BaseMain";
 
 export default {
   name: "Layout",
   components:{
     BaseHeader,
-    BaseFooter
+    BaseFooter,
+    BaseMain
   }
 }
 </script>
