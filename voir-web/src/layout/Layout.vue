@@ -1,17 +1,19 @@
 <template>
-  <div class="common-layout">
-    <el-container>
-      <el-header>
-        <BaseHeader/>
-      </el-header>
-      <el-main>
-        <BaseMain/>
-      </el-main>
-      <el-footer>
-        <BaseFooter/>
-      </el-footer>
-    </el-container>
-  </div>
+  <el-row style="height: 60px;line-height: 60px;">
+    <el-col :span="24">
+      <BaseHeader/>
+    </el-col>
+  </el-row>
+  <el-row style="min-height: calc(100vh - 120px)">
+    <el-col :span="24">
+      <BaseMain/>
+    </el-col>
+  </el-row>
+  <el-row style="height: 60px;line-height: 60px;">
+    <el-col :span="24">
+      <BaseFooter/>
+    </el-col>
+  </el-row>
 </template>
 
 <script>
@@ -21,7 +23,7 @@ import BaseMain from "@/components/BaseMain";
 
 export default {
   name: "Layout",
-  components:{
+  components: {
     BaseHeader,
     BaseFooter,
     BaseMain

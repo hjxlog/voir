@@ -1,5 +1,5 @@
 <template>
-  <el-row style="margin-top: 15px;">
+  <el-row>
     <el-col :span="12" style="text-align: left;padding-left: 50px;">
       <el-link :underline="false">HJX's Site</el-link>
     </el-col>
